@@ -8,10 +8,12 @@ import br.com.demo.model.Topico;
 import br.com.demo.repository.CursoRepository;
 import br.com.demo.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -33,9 +35,10 @@ public class TopicosController {
 
     //@RequestMapping(value="/topicos" , method = RequestMethod.GET)
     @GetMapping
-    public Page<TopicoDto> lista(@RequestParam(required = false) String nomeCurso, @RequestParam int pagina, @RequestParam int qtd, @RequestParam String ordenacao) {
+    public Page<TopicoDto> lista(@RequestParam(required = false) String nomeCurso
+            , @PageableDefault(sort = "id", direction = Sort.Direction.DESC, page=0, size=10) Pageable paginacao) {
 
-        Pageable paginacao = PageRequest.of(pagina, qtd, Sort.Direction.DESC, ordenacao);
+        //Pageable paginacao = PageRequest.of(pagina, qtd, Sort.Direction.DESC, ordenacao);
 
         if (nomeCurso == null){
 
