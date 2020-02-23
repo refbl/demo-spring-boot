@@ -1,6 +1,7 @@
 package br.com.demo.controller.dto;
 
 import br.com.demo.model.Topico;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,8 +24,12 @@ public class TopicoDto {
         this.dataCriacao = topico.getDataCriacao();
     }
 
-    public static List<TopicoDto> converter(List<Topico> topicos) {
-        return topicos.stream().map(TopicoDto::new).collect(Collectors.toList());
+    public static Page<TopicoDto> converter(Page<Topico> topicos) {
+
+        return topicos.map(TopicoDto::new);
+
+        // Implementacao abaixo era usada para devolver List
+        //return topicos.stream().map(TopicoDto::new).collect(Collectors.toList());
 
     }
 

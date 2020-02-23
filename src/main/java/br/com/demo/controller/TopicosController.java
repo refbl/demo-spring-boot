@@ -4,20 +4,21 @@ import br.com.demo.controller.dto.DetalhesDoTopicoDto;
 import br.com.demo.controller.dto.TopicoDto;
 import br.com.demo.controller.form.AtualizacaoTopicoForm;
 import br.com.demo.controller.form.TopicoForm;
-import br.com.demo.model.Curso;
 import br.com.demo.model.Topico;
 import br.com.demo.repository.CursoRepository;
 import br.com.demo.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,14 +33,20 @@ public class TopicosController {
 
     //@RequestMapping(value="/topicos" , method = RequestMethod.GET)
     @GetMapping
-    public List<TopicoDto> lista(String nomeCurso){
+    public Page<TopicoDto> lista(@RequestParam(required = false) String nomeCurso, @RequestParam int pagina, @RequestParam int qtd, @RequestParam String ordenacao) {
+
+        Pageable paginacao = PageRequest.of(pagina, qtd, Sort.Direction.DESC, ordenacao);
 
         if (nomeCurso == null){
-            List<Topico> topicoList = topicoRepository.findAll();
-            return TopicoDto.converter(topicoList);
+
+            Page<Topico> topicos = topicoRepository.findAll(paginacao);
+            return TopicoDto.converter(topicos);
+
         } else {
-            List<Topico> topicoList = topicoRepository.findByCursoNome(nomeCurso);
+
+            Page<Topico> topicoList = topicoRepository.findByCursoNome(nomeCurso, paginacao);
             return TopicoDto.converter(topicoList);
+
         }
 
     }
