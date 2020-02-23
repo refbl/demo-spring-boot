@@ -69,7 +69,7 @@ public class TopicosController {
     @Transactional
     public ResponseEntity<TopicoDto> atualizar(@PathVariable Long id, @RequestBody @Valid AtualizacaoTopicoForm topicoForm){
         Optional<Topico> topicoOptional = topicoRepository.findById(id);
-        
+
         if (topicoOptional.isPresent()) {
             Topico topico = topicoForm.atualizar(id, this.topicoRepository);
             return ResponseEntity.ok(new TopicoDto(topico));
