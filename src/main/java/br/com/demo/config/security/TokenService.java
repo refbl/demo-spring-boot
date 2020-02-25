@@ -1,8 +1,10 @@
 package br.com.demo.config.security;
 
 import br.com.demo.model.Usuario;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,23 @@ public class TokenService {
                 .setExpiration(dataExpiracao)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
+
+    }
+
+    public boolean isTokenValido(String token) {
+        try{
+            Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
+    public Long getIdUsuario(String token) {
+
+        var body = Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token).getBody();
+
+        return Long.parseLong(body.getSubject());
 
     }
 }
